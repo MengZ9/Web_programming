@@ -73,16 +73,88 @@ function checkForWinner() {
 
 function newGame() {
 	// TODO: Complete the function
+	clearTimeout(computerMoveTimeout);
+	computerMoveTimeout = 0;
+	let button = getGameBoardButtons();
+	for(let i = 0; i < button.length; i++){
+		button[i].innerHTML = "";
+		button[i].classList.remove("x");
+		button[i].classList.remove("o");
+		button[i].removeAttribute("disabled")
+	}
+	playerTurn = true;
+	let turnInfo = document.getElementById("turnInfo");
+	turnInfo.textContent = "Your turn";
 }
 
 function boardButtonClicked(button) {
 	// TODO: Complete the function
+	if(playerTurn == true) {
+		button.innerHTML = "X";
+		button.classList.add("x");
+		button.disabled = true;
+		switchTurn();
+	}
 }
+
 
 function switchTurn() {
 	// TODO: Complete the function
-}
+	let status =checkForWinner();
+
+	if(status == 1){
+		if(playerTurn  == true){
+			computerMoveTimeout = setTimeout(makeComputerMove, 1000);
+			playerTurn = false;
+			let turnInfo = document.getElementById("turnInfo");		
+			turnInfo.textContent = "Computer's turn";
+		}
+		else{
+			playerTurn = true;
+			let turnInfo = document.getElementById("turnInfo");
+			turnInfo.textContent = "Your turn";
+		}
+	}
+	else{
+		if(status == 2){
+			playerTurn = flase;	
+			let turnInfo = document.getElementById("turnInfo");
+			turnInfo.textContent = "You win!";
+			}
+	
+			else if (status == 3){
+			playerTurn = flase;
+			let turnInfo = document.getElementById("turnInfo");
+			turnInfo.textContent = "Computer win!";
+			}
+	
+			else {
+				playerTurn = flase;
+				let turnInfo = document.getElementById("turnInfo");
+				turnInfo.textContent = "Draw game!";
+			}
+	}
+		
+		
+	}
+
+
 
 function makeComputerMove() {
 	// TODO: Complete the function
+	//find available buttons
+	let available = [];
+	let button = getGameBoardButtons();
+	for(let i = 0; i < button.length; i++){
+		if(button[i].innerHTML !== "X" && button[i].innerHTML !== "O" ){
+			available.push(i);
+		}
+	}
+	
+	//return to the number that are <= to the 
+	let random = available[Math.floor(Math.random()* available.length)];
+	button[random].innerHTML= "O";
+	button[random].classList.add("o");
+	button[random].disabled = true;
+	switchTurn();
 }
